@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Valentine 💕</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+font-family: Arial, sans-serif;
+background: #ffe6ee;
+margin: 0;
+padding: 0;
+overflow-x: hidden;
+}
+
+/* --- PAGE 1 --- */
+#page1 {
+display: flex;
+justify-content: center;
+align-items: center;
+min-height: 100vh;
+padding: 20px;
+}
+
+.box {
+background: white;
+padding: 25px;
+border-radius: 15px;
+text-align: center;
+box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+max-width: 360px;
+width: 100%;
+position: relative;
+}
+
+img {
+width: 100%;
+border-radius: 10px;
+margin-bottom: 20px;
+}
+
+h1 {
+font-size: 22px;
+margin-bottom: 20px;
+}
+
+.buttons {
+position: relative;
+height: 120px;
+}
+
+button {
+padding: 14px 22px;
+font-size: 16px;
+border: none;
+border-radius: 10px;
+cursor: pointer;
+margin: 10px;
+}
+
+.yes {
+background: #ff4d88;
+color: white;
+}
+
+.no {
+background: #ccc;
+position: absolute;
+left: 50%;
+transform: translateX(-50%);
+}
+
+/* --- PAGE 2 --- */
+#page2 {
+display: none;
+height: 100vh;
+background: linear-gradient(#ffb6c1, #ffe6ee);
+overflow: hidden;
+display: flex;
+justify-content: center;
+align-items: center;
+text-align: center;
+flex-direction: column;
+}
+
+#page2 h1 {
+color: #fff;
+font-size: 28px;
+padding: 20px;
+z-index: 2;
+}
+
+.heart {
+position: absolute;
+color: #ff4d88;
+font-size: 24px;
+animation: fall linear forwards;
+}
+
+@keyframes fall {
+from {
+transform: translateY(-50px);
+opacity: 1;
+}
+to {
+transform: translateY(110vh);
+opacity: 0;
+}
+}
+</style>
+</head>
+<body>
+
+<audio id="music" src="best-part.mp3" loop></audio>
+
+<!-- PAGE 1 -->
+<div id="page1">
+<div class="box">
+<img src="https://media1.tenor.com/images/2d4138c7c24d21b9d17f66a54ee7ea03/tenor.gif?itemid=12535134" alt="Câlin">
+
+<h1>Est-ce que tu veux être ma valentine Clara ? (stp vu que c la hess et qu’on a pas de mecs)</h1>
+
+<div class="buttons">
+<button class="yes" onclick="oui()">Oui 💖</button>
+<button class="no" id="noBtn">Non 😢</button>
+</div>
+</div>
+</div>
+
+<!-- PAGE 2 -->
+<div id="page2">
+<h1>Je savais t'allais dire oui 💖<br>Ça va être incroyable hihihih (on va grv rien faire)</h1>
+</div>
+
+<script>
+const music = document.getElementById("music");
+const noBtn = document.getElementById("noBtn");
+const page1 = document.getElementById("page1");
+const page2 = document.getElementById("page2");
+
+document.addEventListener("click", () => {
+music.play();
+}, { once: true });
+
+function oui() {
+page1.style.display = "none";
+page2.style.display = "flex";
+startHearts();
+}
+
+function fuir() {
+const x = Math.random() * 240 - 120;
+const y = Math.random() * 120 - 60;
+noBtn.style.transform = `translate(${x}px, ${y}px)`;
+}
+
+noBtn.addEventListener("mouseover", fuir);
+noBtn.addEventListener("touchstart", fuir);
+
+/* Hearts animation */
+function startHearts() {
+setInterval(() => {
+const heart = document.createElement("div");
+heart.classList.add("heart");
+heart.innerHTML = "💖";
+heart.style.left = Math.random() * 100 + "vw";
+heart.style.animationDuration = (2 + Math.random() * 3) + "s";
+document.body.appendChild(heart);
+
+setTimeout(() => heart.remove(), 5000);
+}, 300);
+}
+</script>
+
+</body>
+</html>
