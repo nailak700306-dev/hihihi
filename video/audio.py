@@ -1,5 +1,6 @@
 """Builds the voice track, an original synthesized score, and the timeline JSON."""
-import json, subprocess, numpy as np, wave
+import json, os, subprocess, numpy as np, wave
+TTS_DIR = os.environ.get('TTS_DIR', 'tts'); OUT_MIX = os.environ.get('OUT_MIX', 'mix.wav'); OUT_TL = os.environ.get('OUT_TL', 'timeline.json')
 
 SR = 44100
 rng = np.random.default_rng(7)
@@ -19,7 +20,7 @@ GAPS = [0.10, 0.16, 0.14, 0.14, 0.14, 0.18, 0.22, 0.30, 0.22]  # silence before 
 lines, t = [], 0.0
 voice_parts = []
 for i in range(9):
-    x = load(f'tts/{i+1}.wav')
+    x = load(f'{TTS_DIR}/{i+1}.wav')
     t += GAPS[i]
     lines.append({'start': round(t, 3), 'dur': round(len(x) / SR, 3)})
     voice_parts.append((t, x))
@@ -183,8 +184,8 @@ fade = np.ones(N); fade[-int(0.8 * SR):] = np.linspace(1, 0, int(0.8 * SR))
 mix = voice * 1.0 + music * 0.33 * duck * fade
 mix /= np.max(np.abs(mix)) / 0.95
 st = np.stack([mix, mix], 1)
-with wave.open('mix.wav', 'wb') as w:
+with wave.open(OUT_MIX, 'wb') as w:
     w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR)
     w.writeframes((st * 32767).astype(np.int16).tobytes())
-json.dump({'total': TOTAL, 'lines': lines}, open('timeline.json', 'w'), indent=1)
+json.dump({'total': TOTAL, 'lines': lines}, open(OUT_TL, 'w'), indent=1)
 print(TOTAL, lines)
