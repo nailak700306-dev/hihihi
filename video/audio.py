@@ -24,7 +24,7 @@ for i in range(9):
     lines.append({'start': round(t, 3), 'dur': round(len(x) / SR, 3)})
     voice_parts.append((t, x))
     t += len(x) / SR
-TOTAL = t + 0.9
+TOTAL = t + 0.6
 N = int(TOTAL * SR)
 voice = np.zeros(N)
 for st, x in voice_parts:
@@ -42,7 +42,7 @@ def note(f):  # midi -> hz
 
 def adsr(n, a, r):
     e = np.ones(n)
-    na, nr = int(a * SR), int(r * SR)
+    na, nr = min(int(a * SR), n // 2), min(int(r * SR), n // 2)
     e[:na] = np.linspace(0, 1, na)
     if nr:
         e[-nr:] *= np.linspace(1, 0, nr)
