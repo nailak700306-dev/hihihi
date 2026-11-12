@@ -16,7 +16,7 @@ def load(path):
     return x[max(idx[0] - 400, 0): idx[-1] + 2000]
 
 
-GAPS = [0.10, 0.16, 0.14, 0.14, 0.14, 0.18, 0.22, 0.30, 0.22]  # silence before each line
+GAPS = [float(g) for g in os.environ.get("GAPS", "0.10,0.16,0.14,0.14,0.14,0.18,0.22,0.30,0.22").split(",")]  # silence before each line
 lines, t = [], 0.0
 voice_parts = []
 for i in range(9):
