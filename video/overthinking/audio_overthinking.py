@@ -8,12 +8,12 @@ TTS_DIR = os.environ.get('TTS_DIR', 'ot/tts')
 OUT_MIX = os.environ.get('OUT_MIX', 'ot/mix.wav')
 OUT_TL = os.environ.get('OUT_TL', 'ot/timeline.json')
 NL = 10
-GAPS = [0.10, 0.18, 0.12, 0.12, 0.30, 0.12, 0.12, 0.45, 0.35, 0.15]
+GAPS = [0.10, 0.25, 0.15, 0.15, 0.30, 0.15, 0.15, 0.40, 0.35, 0.20]
 
 
 def load(path):
     raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', path, '-af',
-                          'highpass=f=70,equalizer=f=3500:t=q:w=1:g=2.5,acompressor=threshold=-20dB:ratio=3:attack=5:release=80',
+                          'highpass=f=60,acompressor=threshold=-22dB:ratio=2:attack=15:release=200,equalizer=f=2800:t=q:w=1.5:g=1.5',
                           '-ar', str(SR), '-ac', '1', '-f', 'f32le', '-'], capture_output=True, check=True).stdout
     x = np.frombuffer(raw, np.float32).astype(np.float64)
     idx = np.nonzero(np.abs(x) > 0.01)[0]
@@ -198,7 +198,7 @@ venv = np.clip(venv / 0.05, 0, 1)
 venv = np.convolve(venv, np.ones(6615) / 6615, 'same')
 fade = np.ones(N); fn = int(1.2 * SR); fade[-fn:] = np.linspace(1, 0, fn)
 fade[:int(0.3 * SR)] = np.linspace(0, 1, int(0.3 * SR))
-mix = voice + music * 0.36 * (1 - 0.5 * venv) * fade
+mix = voice + music * 0.24 * (1 - 0.6 * venv) * fade
 mix /= np.max(np.abs(mix)) / 0.95
 st = np.stack([mix, mix], 1)
 with wave.open(OUT_MIX, 'wb') as w:
